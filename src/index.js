@@ -27,7 +27,7 @@ return array.map(
 ({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => `<div class="photo-card">
 <div class="box-img">
 <a class="slightbox" href="${largeImageURL}" data-width="1280" data-height="auto">
-<img class="img__card" src="${webformatURL}" alt="${tags}" style="width=320px" loading="lazy" /></a></div>
+<img class="img__card" src="${webformatURL}" alt="${tags}" loading="lazy" /></a></div>
 <div class="info">
   <p class="info-item">
     <b>Likes</br>${likes}</b>
