@@ -10,6 +10,10 @@ body {
   background-color: #fafafa;
   color: #212121;
   line-height: 1.5;
+  font-weight: 400;
+    font-size: 14px;
+    
+    letter-spacing: 0.03em;
 }
 
 #search-box {
@@ -17,6 +21,12 @@ body {
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+}
+
+.search-form{
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .info{
@@ -41,6 +51,7 @@ body {
   flex-wrap: wrap;
   gap: 20px;
   row-gap: 20px;
+  justify-content: center;
 }
 
 
@@ -49,5 +60,16 @@ img{
   height: 200px;
   background-size: cover;
 
+}
+
+.load-more{
+  display: block;
+  border-color:rgba(17, 16, 4, 0.5);
+  border-radius: 4px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 10px;
+  padding: 7px;
+  
 }
 
