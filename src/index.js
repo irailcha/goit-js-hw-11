@@ -13,12 +13,13 @@ const API_KEY="35813093-cabe0c7219a04f4206a0ddb1b";
 let searchQuery ="";
 let currentPage= 1;
 
-
 function showTotalHits(totalHits) {
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
   }
+  
+  
 
-async function getPixabay(searchQuery, currentPage) {
+async function getPixabay(searchQuery) {
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -33,6 +34,7 @@ async function getPixabay(searchQuery, currentPage) {
         },
       });
       const data = response.data;
+      showTotalHits(data.totalHits);
       return data;
     } catch (error) {
       console.log(error);
@@ -70,25 +72,15 @@ function creatMarkup(array){
 paginationButton.addEventListener('click', onClick);
 
 function onClick() {
-  currentPage += 1;
- 
-  getPixabay(searchQuery, currentPage)
-    .then((data) => {
-      gallery.insertAdjacentHTML('beforeend', creatMarkup(data.hits));
-      lightbox.refresh();
-      paginationButton.hidden= false;
-      if (data.currentPage !== data.totalHits) {
-        paginationButton.hidden= true;
-        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-        return null;
-      } else if (data.currentPage === "") {
-        paginationButton.hidden= true;
-        Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
-        return null;
-      }
+    currentPage += 1;
+    getPixabay(searchQuery, currentPage)
+      .then((data) => {
+        gallery.insertAdjacentHTML('beforeend', creatMarkup(data.hits));
+        lightbox.refresh();
+        paginationButton.hidden= false;
     })
-    .catch((error) => console.log(error));
-}
+      .catch((error) => console.log(error));
+  }
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -99,6 +91,15 @@ searchForm.addEventListener('submit', (event) => {
     .then((data) => {
       gallery.innerHTML = creatMarkup(data.hits);
       lightbox.refresh();
+      if (data.currentPage !== data.totalHits) {
+        paginationButton.hidden= true;
+        return Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+      } else if (data.currentPage === "") {
+        paginationButton.hidden= true;
+        return Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
+      }
+      
+  
     })
     .catch((error) => console.log(error));
 });
