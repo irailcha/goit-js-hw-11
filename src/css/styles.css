@@ -24,41 +24,49 @@ body {
 }
 
 .search-form{
+  position: absolute;
   display: block;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  
+  
+  
 }
-
 .info{
   display:flex;
   gap:10px;
-  padding-bottom: 10px;
+  text-align: center;
+  justify-content: center;
+
   
 }
 
 .photo-card{
   
   border: 1px solid rgba(17, 16, 4, 0.5);
-  box-shadow: 1px 1px 1px  rgba(17, 16, 4, 0.3);
+  box-shadow: 2px 2px 1px  rgba(17, 16, 4, 0.3);
   width: 280px;
   height: 300px;
   
-  
-  
 }
+
+
 .gallery{
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   row-gap: 20px;
   justify-content: center;
+  margin-top: 60px;
 }
 
 
 img{
   width: 100%;
   height: 200px;
-  background-size: cover;
+  object-fit: cover;
 
 }
 
@@ -69,10 +77,18 @@ img{
   margin-right: auto;
   margin-left: auto;
   margin-top: 10px;
-  padding: 7px;
+  padding: 10px;
   
 }
 
 .hidden {
   display: none;
+}
+
+.container{
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(43, 41, 57, 0.9);
+  top: 0;
 }

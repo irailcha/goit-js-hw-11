@@ -132,3 +132,15 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
   captionsData: 'alt'
 });
+
+
+const firstChild = gallery.firstElementChild;
+if (firstChild) {
+  const { height: cardHeight } = firstChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: "smooth",
+  });
+}
+
+
