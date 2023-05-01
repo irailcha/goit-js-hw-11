@@ -22,8 +22,7 @@ function showTotalHits(totalHits) {
   
 
   
-
-async function getPixabay(searchQuery) {
+  async function getPixabay(searchQuery, page) {
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -32,98 +31,111 @@ async function getPixabay(searchQuery) {
           image_type: 'photo',
           orientation: 'horizontal',
           safesearch: true,
-          page: currentPage,
+          page,
           per_page: PER_PAGE,
-          
         },
       });
       const data = response.data;
-      
+  
       return data;
     } catch (error) {
       console.log(error);
     }
   }
-
-function creatMarkup(array){
   
-
-  return array.map(
-    ({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => `<div class="photo-card">
-  <div class="box-img">
-  <a class="slightbox" href="${largeImageURL}" data-width="1280" data-height="auto">
-  <img class="img__card" src="${webformatURL}" alt="${tags}" loading="lazy" /></a></div>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</br>${likes}</b>
-    </p>
-    <p class="info-item">
-      <b>Views</br>${views}</b>
-    </p>
-    <p class="info-item">
-      <b>Comments</br>${comments}</b>
-    </p>
-    <p class="info-item">
-      <b>Downloads</br>${downloads}</b>
-    </p>
-  </div>
-  </div>`
-  ).join("")
-}
-
-searchForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  currentPage = 1;
-  const query = searchForm.elements.searchQuery.value.trim();
-  searchQuery = query;
-  paginationButton.classList.add('hidden');
-  getPixabay(searchQuery, currentPage)
-    .then((data) => {
+  function creatMarkup(array) {
+    return array
+      .map(
+        ({
+          webformatURL,
+          largeImageURL,
+          tags,
+          likes,
+          views,
+          comments,
+          downloads,
+        }) =>
+          `<div class="photo-card">
+            <div class="box-img">
+              <a class="slightbox" href="${largeImageURL}" data-width="1280" data-height="auto">
+                <img class="img__card" src="${webformatURL}" alt="${tags}" loading="lazy" />
+              </a>
+            </div>
+            <div class="info">
+              <p class="info-item">
+                <b>Likes</br>${likes}</b>
+              </p>
+              <p class="info-item">
+                <b>Views</br>${views}</b>
+              </p>
+              <p class="info-item">
+                <b>Comments</br>${comments}</b>
+              </p>
+              <p class="info-item">
+                <b>Downloads</br>${downloads}</b>
+              </p>
+            </div>
+          </div>`
+      )
+      .join('');
+  }
+  
+  searchForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    currentPage = 1;
+    const query = searchForm.elements.searchQuery.value.trim();
+    searchQuery = query;
+    paginationButton.classList.add('hidden');
+  
+    try {
+      const data = await getPixabay(searchQuery, currentPage);
       if (data.hits.length === 0) {
-        Notiflix.Notify.info('Sorry, there are no images matching your search query. Please try again.');
-        
-        gallery.innerHTML = "";
+        Notiflix.Notify.info(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+  
+        gallery.innerHTML = '';
         return;
       }
-
+  
       const totalHits = data.totalHits;
       if (totalHits === 0) {
-        Notiflix.Notify.info('Sorry, there are no images matching your search query. Please try again.');
-        
-        gallery.innerHTML = "";
+        Notiflix.Notify.info(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+  
+        gallery.innerHTML = '';
         return;
       }
-      
+  
       showTotalHits(totalHits);
-      
-
+  
       gallery.innerHTML = creatMarkup(data.hits);
       lightbox.refresh();
       paginationButton.classList.remove('hidden');
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
+  paginationButton.addEventListener('click', onClick);
 
-
-    })
-    .catch((error) => console.log(error));
-});
-
-paginationButton.addEventListener('click', onClick);
-
-function onClick() {
-  currentPage += 1;
-  getPixabay(searchQuery, currentPage)
-    .then((data) => {
+  async function onClick() {
+    currentPage += 1;
+    try {
+      const data = await getPixabay(searchQuery, currentPage);
       gallery.insertAdjacentHTML('beforeend', creatMarkup(data.hits));
       lightbox.refresh();
-      
-      if (data.hits.length < 40) {
+  
+      if (data.hits.length < 40 || currentPage * 40 >= data.totalHits) {
         paginationButton.classList.add('hidden');
         Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
       }
-    })
-    .catch((error) => console.log(error));
-}
 
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
 
