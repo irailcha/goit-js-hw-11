@@ -72,3 +72,7 @@ img{
   padding: 7px;
   
 }
+
+.hidden {
+  display: none;
+}
